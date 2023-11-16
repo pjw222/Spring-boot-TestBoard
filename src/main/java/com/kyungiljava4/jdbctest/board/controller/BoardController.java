@@ -100,5 +100,19 @@ public class BoardController {
 	    boardService.delete(id);
 	    return "redirect:/board";
 	}
+    @GetMapping("/paged")
+    @ResponseBody
+    public List<Board> getBoardsPaged(@RequestParam int page, @RequestParam int size) {
+        int currentPage = page > 0 ? page : 1;
+        int itemsPerPage = size > 0 ? size : 10;
+
+        return boardService.getBoardsInRange(currentPage, itemsPerPage);
+    }
+
+    @GetMapping("/total")
+    @ResponseBody
+    public int getTotalBoards() {
+        return boardService.getTotalBoards();
+    }
 
 }

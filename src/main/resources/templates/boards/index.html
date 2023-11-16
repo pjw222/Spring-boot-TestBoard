@@ -23,24 +23,56 @@
         <div class="user">user : <span class="user-name"></span></div>
       </div>
     </li>
+    <div id="pagination">
+    </div>
     <a href="/board/thyme">타임으로가기</a>
-    <script>	
-      async function getList() {
-        const list = (await axios.post("/board", {})).data;
-        console.log(list);
-        const listElem = document.getElementById("list");
-        const itemElemTemplate = document.getElementsByClassName("none")[0];
-        list.forEach((item) => {
-          const tempElem = itemElemTemplate.cloneNode(true);
-          console.log(tempElem);
-          tempElem.classList.remove("none");
-          tempElem.getElementsByClassName("title")[0].innerHTML = item.title;
-          tempElem.getElementsByClassName("item-id")[0].href = "/board/item?id="+item.id;
-          tempElem.getElementsByClassName("user-name")[0].innerHTML = item.user;
-          listElem.append(tempElem);
-        });
-      }
-      getList();
-    </script>
+    <script>
+     const itemsPerPage = 3; 
+     let currentPage = 1;     
+
+async function getList(page) {
+
+    const list = (await axios.get(`/paged?page=${page}&size=${itemsPerPage}`)).data;
+
+    const listElem = document.getElementById("list");
+    const itemElemTemplate = document.getElementsByClassName("none")[0];
+
+    listElem.innerHTML = "";
+
+    list.forEach((item) => {
+        const tempElem = itemElemTemplate.cloneNode(true);
+        tempElem.classList.remove("none");
+        tempElem.getElementsByClassName("title")[0].innerHTML = item.title;
+        tempElem.getElementsByClassName("item-id")[0].href = "/board/item?id=" + item.id;
+        tempElem.getElementsByClassName("user-name")[0].innerHTML = item.user;
+        listElem.append(tempElem);
+    });
+}
+
+async function updatePagination() {
+    const totalItems = (await axios.get("/total")).data;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    const paginationElem = document.getElementById("pagination");
+    paginationElem.innerHTML = "";
+
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement("button");
+        pageButton.innerText = i;
+        pageButton.addEventListener("click", ((i) => {
+            return async (e) => {
+                currentPage = i;
+                await getList(currentPage);
+                updatePagination(e);
+            };
+        })(i));
+        paginationElem.appendChild(pageButton);
+    }
+}
+
+getList(currentPage);
+updatePagination();
+
+  </script>
   </body>
 </html>
