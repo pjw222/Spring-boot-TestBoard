@@ -94,4 +94,11 @@ public class BoardController {
 		sb.append("\"content\":\"" + board.getContent() + "\"}");
 		return sb.toString();
 	}
+	@ResponseBody
+	@PostMapping("/board/delete")
+	public String deleteBoard(@RequestParam("id") int id) {
+	    boardService.delete(id);
+	    return "redirect:/board";
+	}
+
 }

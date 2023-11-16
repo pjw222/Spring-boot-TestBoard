@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko" mxlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>문서</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
@@ -11,9 +11,12 @@
         <h1 id="title"></h1>
         <h2 id="user"></h2>
         <p id="content"></p>
+        <p id="boardId"></p>
         <button id="cancel">뒤로가기</button>
+        <button id="editButton">수정하기</button>
+        <button id="deleteButton">삭제</button> 
     </div>
-    <a th:href="@{'/board/edit?id=' + ${item.id}}">수정하기</a>
+
     <script>
         async function getBoard(){
             const params = new URLSearchParams();
@@ -21,17 +24,31 @@
 
             const board = (await axios.post("/board/item", params)).data;
             console.log(board);
-            document.getElementById("title").innerHTML = "제목 : "+board.title;
-            document.getElementById("user").innerHTML = "글쓴이 : "+board.user;
-            document.getElementById("content").innerHTML = "내용 : "+board.content;
+            document.getElementById("boardId").innerHTML = " id : " + board.id;
+            document.getElementById("title").innerHTML = "제목 : " + board.title;
+            document.getElementById("user").innerHTML = "글쓴이 : " + board.user;
+            document.getElementById("content").innerHTML = "내용 : " + board.content;
+            document.getElementById('editButton').onclick = (e) => {
+                window.location.href = "/board/edit?id=" + board.id;
+            };
+            document.getElementById('deleteButton').onclick = async () => {
+                if (confirm('삭제할거임?')) {
+                    const deleteParams = new URLSearchParams();
+                    deleteParams.append('id', board.id);
+                    await axios.post("/board/delete", deleteParams);
+                    window.location.href = "/board";
+                }
+            };
         }
+
         getBoard();
-        document.getElementById('cancel').onclick = (e)=>{
+
+        document.getElementById('cancel').onclick = (e) => {
             e.preventDefault();
-           // location.href = "/board";
-           history.back();
+            history.back();
         };
-   </script
+      
+       
     </script>
 </body>
 </html>
