@@ -1,0 +1,32 @@
+<html lang="ko" mxlns:th="http://www.thymeleaf.org">
+<body>
+         <a 
+           th:fragment="itemFragment (item)"
+           class="items-inner-box" 
+           style="color:blue" 
+           th:object="${item}"
+           th:href="@{/board/item (id=*{id})}"
+           >
+            <div class="title">[[${item.title}]]</div>
+            <div class="user">
+               user : <span class="user-name" th:text="*{user}"></span>
+            </div>
+        </a>
+        <a 
+        th:fragment="itemFragmentPink (item)"
+        class="items-inner-box" 
+        style="color:pink" 
+        th:object="${item}"
+        th:href="@{/board/item (id=*{id})}"
+        >
+         <div class="title">[[${item.title}]]</div>
+         <div class="user">
+            user : <span class="user-name" th:text="*{user}"></span>
+         </div>
+     </a>
+
+
+
+
+</body>
+</html>

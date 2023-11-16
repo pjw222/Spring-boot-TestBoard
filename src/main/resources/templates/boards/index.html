@@ -1,0 +1,46 @@
+<html lang="ko" mxlns:th="https://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>게시판</title>
+    <link rel="stylesheet" href="/boards/index.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <h1>게시판 목록</h1>
+    <a href="/board/add">게시글 작성</a>
+    <ul id="list">
+      <li class="items">
+        <div class="items-inner-box">
+          <div class="title">Test</div>
+          <div class="user">user : 테스트중</div>
+        </div>
+      </li>
+    </ul>
+    <li class="items none">
+      <div class="items-inner-box">
+        <a class="item-id"><div class="title" name="id"></div></a>
+        <div class="user">user : <span class="user-name"></span></div>
+      </div>
+    </li>
+    <a href="/board/thyme">타임으로가기</a>
+    <script>	
+      async function getList() {
+        const list = (await axios.post("/board", {})).data;
+        console.log(list);
+        const listElem = document.getElementById("list");
+        const itemElemTemplate = document.getElementsByClassName("none")[0];
+        list.forEach((item) => {
+          const tempElem = itemElemTemplate.cloneNode(true);
+          console.log(tempElem);
+          tempElem.classList.remove("none");
+          tempElem.getElementsByClassName("title")[0].innerHTML = item.title;
+          tempElem.getElementsByClassName("item-id")[0].href = "/board/item?id="+item.id;
+          tempElem.getElementsByClassName("user-name")[0].innerHTML = item.user;
+          listElem.append(tempElem);
+        });
+      }
+      getList();
+    </script>
+  </body>
+</html>

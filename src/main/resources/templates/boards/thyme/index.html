@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko" mxlns:th="http://www.thymeleaf.org">
+   <!--
+     HTMl 주석
+   -->
+   <!--/*-- 타임리프에서의 주석 --*/-->
+   
+   <!--/*-->
+   <!--
+   타임리프에서의 주석 여러줄일때는 자동완성으로 줄바꿈이......슬슳 넘어가라
+   아직도 짧네
+   
+   ${} << 변수 가져오기
+   *{} << 부모 엘리먼트에서 작성된 객체의 변수가져오기
+   @{} << url 생성하기
+   ~{} << jsp의 include와 같은 기능을 하는 fragment 사용시 사용
+
+   #{} << 다국어 지원 (i18n 사용) properties로 작성된 타국어를 적용한다. //
+   internationaliztion
+   
+    #request << ex)${#request.getAttribute("test")}
+    #session
+    #response
+    #servlet == applicationScope(jsp)
+    #locale
+    param
+    session
+    @Bean << ex>@boardService
+
+    switch, case  
+    if, unless
+
+   -->
+   <!--*/-->
+   
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>게시판</title>
+   <link rel="stylesheet" href="/boards/index.css" />
+   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+   <h1>게시판 목록</h1>
+   <div th:text="${test}"></div>
+   <div>[[${test}]]</div>
+   <div th:utext="${tag}"></div>
+   <div>[(${tag})]</div>
+   <a href="./add">게시글 작성</a>
+   <ul id="list">
+        <li class="items" th:each="item:${list}" th:insert="~{/boards/thyme/item :: itemFragment (${item})}"></li>
+   </ul>
+   <ul id="list">
+    <li class="items" th:each="item:${list}" >
+        <div th:replace="~{/boards/thyme/item :: itemFragmentPink (${item})}"></div>
+    </li>
+
+</ul>
+   <ul id="list">
+      <li class="items" th:each="item:${list}" th:object="${item}">
+         <a 
+           class="items-inner-box" 
+           style="color:red" 
+           th:href="@{/board/item (id=*{id})}"
+           >
+            <div class="title">[[${item.title}]]</div>
+            <div class="user">
+               user : <span class="user-name" th:text="*{user}"></span>
+            </div>
+         </a>
+      </li>
+   </ul>    
+   <div th:with="tempData='변수 생성 체크'">[[${tempData}]]</div>
+<a href="/board">일반 게시판 가기</a>
+   <script>
+      console.log("[[${test}]]");
+      <!--console.log([[${list}]]);-->
+</script>
+</body>
+
+</html>

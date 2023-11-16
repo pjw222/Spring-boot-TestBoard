@@ -1,0 +1,46 @@
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>게시글 추가</title>
+    <link rel="stylesheet" href="/boards/add.css" />
+  </head>
+  <body>
+    <form id="add-form" action="/board/add" method="post">
+      <fieldset>
+        <legend>게시글 추가</legend>
+        <div>
+          <label for="user"
+            ><input type="text" id="user" name="user" placeholder="사용자 이름"
+          /></label>
+        </div>
+        <div>
+          <label for="title"
+            ><input type="text" id="title" name="title" placeholder="제목"
+          /></label>
+        </div>
+        <div>
+          <textarea name="content" id="content" cols="30" rows="10"></textarea>
+        </div>
+        <div>
+          <button>업로드</button>
+          <button id="cancel">뒤로가기</button>
+        </div>
+      </fieldset>
+    </form>
+    <script>
+        document.getElementById('add-form').onsubmit = (e)=>{
+            if(e.target.user.value == "admin") e.preventDefault();
+            if(e.target.user.value.length <3) e.preventDefault();
+            if(!(e.target.user.value && e.target.content.value && e.target.title.value)){
+                e.preventDefault();
+            }
+        }
+        document.getElementById('cancel').onclick = (e)=>{
+            e.preventDefault();
+           // location.href = "/board";
+           history.back();
+        };
+    </script>
+  </body>
+</html>
